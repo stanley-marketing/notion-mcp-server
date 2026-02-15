@@ -11,11 +11,11 @@ export function register(server: McpServer): void {
   registerTool(
     server,
     "update_item",
-    "Update an item by URL or ID. Updates title/fields, and optionally appends or replaces content.",
+    "Update an item by URL or ID. Updates title/fields, and optionally appends or replaces content. To update column values in a database item, pass them in the 'fields' parameter as simple key-value pairs (e.g., {\"Status\": \"Done\", \"Priority\": \"High\"}). Call get_collection first to discover available field names and types.",
     {
       item: z.string().describe("Item identifier (URL or ID)"),
       title: z.string().optional().describe("New title (if applicable)"),
-      fields: z.record(z.unknown()).optional().describe("Field values to update (best-effort mapping)"),
+      fields: z.record(z.unknown()).optional().describe("Column values to update as field_name -> value pairs. Call get_collection first to see available field names and types. Values are auto-coerced: strings for rich_text/select/status, numbers for number, booleans for checkbox, arrays of strings for multi_select (e.g. [\"Tag1\", \"Tag2\"]), {\"start\": \"2024-01-15\"} for date, user IDs for people."),
       append_content: z.string().optional().describe("Plain-text/markdown content to append"),
       replace_content: z.string().optional().describe("Plain-text/markdown content that replaces the entire page body"),
     },

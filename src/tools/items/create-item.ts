@@ -11,13 +11,13 @@ export function register(server: McpServer): void {
   registerTool(
     server,
     "create_item",
-    "Create an item. Provide either 'collection' or 'parent_item'.",
+    "Create an item in a collection (database) or under a parent item (page). To set multiple column values in a database, first call get_collection to discover field names and types, then pass them in the 'fields' parameter as simple key-value pairs (e.g., {\"Status\": \"Done\", \"Priority\": \"High\"}). The title is set separately via the 'title' parameter.",
     {
       collection: z.string().optional().describe("Collection identifier (URL or ID)"),
       parent_item: z.string().optional().describe("Parent item identifier (URL or ID)"),
       title: z.string().describe("Item title"),
-      fields: z.record(z.unknown()).optional().describe("Field values (best-effort mapping using collection schema)"),
-      content: z.string().optional().describe("Optional plain-text content to add to the item"),
+      fields: z.record(z.unknown()).optional().describe("Column values as field_name -> value pairs. Call get_collection first to see available field names and types. Values are auto-coerced: strings for rich_text/select/status, numbers for number, booleans for checkbox, arrays of strings for multi_select (e.g. [\"Tag1\", \"Tag2\"]), {\"start\": \"2024-01-15\"} for date, user IDs for people."),
+      content: z.string().optional().describe("Optional plain-text/markdown content to add to the item body"),
     },
     async ({ collection, parent_item, title, fields, content }) => {
       try {
